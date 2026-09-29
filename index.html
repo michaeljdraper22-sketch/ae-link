@@ -11,7 +11,8 @@
   if (!gist) { t.textContent = "Link incomplete"; m.textContent = "Open this page from its full address."; return; }
   var tries = 0;
   function go() {
-    fetch("https://gist.githubusercontent.com/" + user + "/" + gist + "/raw/url.json")
+    // ?t= cache-buster: the raw gist url is CDN-cached for 5 min otherwise
+    fetch("https://gist.githubusercontent.com/" + user + "/" + gist + "/raw/url.json?t=" + Date.now())
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (j) {
         if (j && j.url && /^https:\/\/[a-z0-9-]+\.trycloudflare\.com\/?$/.test(j.url)) {
