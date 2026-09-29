@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connecting…</title>
+<style>body{background:#000;color:#cfd3dc;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center}.c{max-width:30em;padding:2em}h1{font-size:18px;font-weight:600;margin:0 0 10px}#m{color:#8a90a0;font-size:13px;line-height:1.6}</style></head>
+<body><div class="c"><h1 id="t">Connecting…</h1><div id="m"></div></div>
+<script>
+(function () {
+  var user = location.host.split(".github.io")[0];
+  var gist = location.hash.slice(1);
+  var t = document.getElementById("t"), m = document.getElementById("m");
+  if (!gist) { t.textContent = "Link incomplete"; m.textContent = "Open this page from its full address."; return; }
+  var tries = 0;
+  function go() {
+    fetch("https://gist.githubusercontent.com/" + user + "/" + gist + "/raw/url.json")
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) {
+        if (j && j.url && /^https:\/\/[a-z0-9-]+\.trycloudflare\.com\/?$/.test(j.url)) {
+          t.textContent = "Opening…";
+          location.replace(j.url);
+        } else { m.textContent = "The link is being refreshed — retrying every 15 s…"; retry(); }
+      })
+      .catch(function () { m.textContent = "The player PC seems offline — retrying every 15 s…"; retry(); });
+  }
+  function retry() { if (tries++ < 500) setTimeout(go, 15000); }
+  go();
+})();
+</script></body></html>
