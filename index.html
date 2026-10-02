@@ -6,7 +6,7 @@
 <script>
 (function () {
   var user = location.host.split(".github.io")[0];
-  var gist = location.hash.slice(1);
+  var gist = location.hash.slice(1) || "dbe80ad1079c118796da9e6c1bc61f46";
   var t = document.getElementById("t"), m = document.getElementById("m");
   if (!gist) { t.textContent = "Link incomplete"; m.textContent = "Open this page from its full address."; return; }
   var tries = 0;
